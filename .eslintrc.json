@@ -1,0 +1,55 @@
+{
+    "extends": [
+        "next/core-web-vitals",
+        "airbnb"
+    ],
+    "plugins": [],
+    "rules": {
+        "no-nested-ternary": 0,
+        "no-plusplus": 0,
+        "import/no-absolute-path": 0,
+        "react/jsx-no-useless-fragment": 0,
+        "react/no-array-index-key": 0,
+        "react/function-component-definition": 0,
+        "jsx-a11y/no-static-element-interactions": 0,
+        "jsx-a11y/click-events-have-key-events": 0,
+        "react/jsx-props-no-spreading": 0,
+        "react/button-has-type": 0,
+        "no-underscore-dangle": 0,
+        "import/export": 0,
+        "camelcase": 0,
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "linebreak-style": [
+            0,
+            "unix"
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/react-in-jsx-scope": 0,
+        "import/extensions": 0,
+        "no-console": 0,
+        "import/prefer-default-export": 0,
+        "max-len": 0,
+        "no-unused-vars": 1,
+        "import/no-extraneous-dependencies": 0,
+        "import/no-unresolved": [
+            0,
+            {
+                "commonjs": true,
+                "amd": true
+            }
+        ],
+        "max-classes-per-file": 0
+    }
+}
