@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchJson } from "@/lib/fetchJson";
 import { useAccount } from "wagmi";
+import { useTheGraph } from "./useTheGraph";
 
 export interface Attribute {
   trait_type: string;
@@ -40,7 +41,7 @@ interface UseNFTsProps {
   auctionData: any;
 }
 
-const fetchMetadata = async (url: string): Promise<Metadata> => fetchJson(url);
+export const fetchMetadata = async (url: string): Promise<Metadata> => fetchJson(url);
 
 export const useMyNFTs = (address: any) => {
   const [nfts, setNfts] = useState<NFTItem[]>([]);
@@ -207,4 +208,64 @@ export const useAggregateNFTs = ({ openSeaData, auctionData }: UseNFTsProps) => 
   }, [openSeaData, auctionData, account?.address]);
 
   return { nfts, loading, error };
+};
+const getLatestNFTsForAddress = (address: string, transfers: any[], nftMinteds: any[]) => {
+  const addressTransfers = transfers.filter((transfer) => transfer.to.toLowerCase() === address.toLowerCase());
+  const latestTimestamp = Math.max(...addressTransfers.map((transfer) => parseInt(transfer.blockTimestamp)));
+
+  const latestTransfers = addressTransfers.filter((transfer) => parseInt(transfer.blockTimestamp) === latestTimestamp);
+
+  const nfts = latestTransfers.map((transfer) => nftMinteds.find((nft) => nft.tokenId === transfer.tokenId));
+  return nfts.filter((nft) => nft); // Filter out undefined values
+};
+export const useNFTData = (address: string) => {
+  const { data, loading, error }:any = useTheGraph({
+    url: "https://api.studio.thegraph.com/query/76625/auctionnft/version/latest",
+    query: `
+    {
+nftminteds{
+  tokenId
+  tokenURI
+}
+  transfers {
+    to
+    tokenId
+    blockTimestamp
+  }
+  
+}
+    `,
+  });
+
+  const [nftData, setNftData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (data) {
+        const nfts = getLatestNFTsForAddress(address, data.data.transfers, data.data.nftminteds);
+        const metadataPromises = nfts.map(async (nft) => {
+          const metadata = await fetchMetadata(nft.tokenURI);
+          return {
+            tokenId: nft.tokenId,
+            contractAddress: "", // Add your contract address here
+            img: metadata.image || "",
+            price: "N/A",
+            tags: metadata.attributes ? metadata.attributes.map((attr: any) => `${attr.trait_type || "N/A"}:${attr.value || "N/A"}`) : [],
+            currentBid: "N/A",
+            currentBidder: "N/A",
+            deadline: "N/A",
+            name: metadata.name || "Unknown",
+            description: metadata.description || "No description available",
+            isOwner: true, // Set based on your logic
+          };
+        });
+        const results = await Promise.all(metadataPromises);
+        setNftData(results);
+      }
+    };
+
+    fetchData();
+  }, [data, address]);
+
+  return { nftData, loading, error };
 };

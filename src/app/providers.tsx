@@ -15,6 +15,7 @@ import {
   sepolia,
   zora,
   localhost,
+  lineaSepolia,
 } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
@@ -33,7 +34,7 @@ const config = getDefaultConfig({
     arbitrum,
     base,
     zora,
-    sepolia,
+    lineaSepolia,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? [localhost]
       : []),
