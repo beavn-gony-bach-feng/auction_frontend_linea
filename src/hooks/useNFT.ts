@@ -215,7 +215,10 @@ const getLatestNFTsForAddress = (address: string, transfers: any[], nftMinteds: 
 
   const latestTransfers = addressTransfers.filter((transfer) => parseInt(transfer.blockTimestamp) === latestTimestamp);
 
-  const nfts = latestTransfers.map((transfer) => nftMinteds.find((nft) => nft.tokenId === transfer.tokenId));
+  const nfts = latestTransfers.map((transfer) => ({
+    ...nftMinteds.find((nft) => nft.tokenId === transfer.tokenId),
+    contractAddress: transfer.contractAddress,
+  }));
   return nfts.filter((nft) => nft); // Filter out undefined values
 };
 export const useNFTData = (address: string) => {
@@ -228,6 +231,7 @@ nftminteds{
   tokenURI
 }
   transfers {
+  contractAddress
     to
     tokenId
     blockTimestamp
@@ -247,7 +251,7 @@ nftminteds{
           const metadata = await fetchMetadata(nft.tokenURI);
           return {
             tokenId: nft.tokenId,
-            contractAddress: "", // Add your contract address here
+            contractAddress: nft.contractAddress, // Add your contract address here
             img: metadata.image || "",
             price: "N/A",
             tags: metadata.attributes ? metadata.attributes.map((attr: any) => `${attr.trait_type || "N/A"}:${attr.value || "N/A"}`) : [],

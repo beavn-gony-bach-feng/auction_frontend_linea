@@ -84,7 +84,7 @@ const MyNFT = () => {
     },
   ];
   const { nftData: nfts, loading, error } = useNFTData(account.address);
-  console.log(nfts);
+  console.log(nfts, loading, error);
 
   if (loading) {
     return (
@@ -109,15 +109,17 @@ const MyNFT = () => {
         <div className="flex justify-between font-bold text-lg">
           <div>My NFT</div>
         </div>
+
         <ScrollArea size="1" type="always" scrollbars="horizontal">
           <div className="flex justify-between">
             {nfts.map((e, i) => (
-              // <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
+            // <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
               <AuctionItem item={e} key={i} />
-              // </PopoverWarp>
+            // </PopoverWarp>
             ))}
           </div>
         </ScrollArea>
+
       </div>
     </div>
   );
