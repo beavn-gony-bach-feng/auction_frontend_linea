@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { postRequestAction } from "./actions";
 
 export const fetchJson = async (url: string) => {
   const response = await fetch(url);
@@ -18,19 +19,19 @@ export const usePostRequest = (url: string | URL | Request) => {
     setError(null);
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+    //   const response = await fetch(url, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(body),
+    //   });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
+      //   if (!response.ok) {
+      //     throw new Error(`Error: ${response.status}`);
+      //   }
 
-      const result = await response.json();
+      const result = await postRequestAction(url, body);
       setData(result);
     } catch (err:any) {
       setError(err.message);
