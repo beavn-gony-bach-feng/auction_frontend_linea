@@ -5,8 +5,9 @@ import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/itemPersonal";
 import PopoverWarp from "@/components/popover";
-import { useMyNFTs } from "@/hooks/useNFT";
+import { useMyNFTs, useNFTData } from "@/hooks/useNFT";
 import { useAccount } from "wagmi";
+import { useTheGraph } from "@/hooks/useTheGraph";
 
 const MyNFT = () => {
   const account = useAccount();
@@ -82,8 +83,8 @@ const MyNFT = () => {
       deadline: "2024-01-01 00:00:00",
     },
   ];
-  const { nfts, loading, error } = useMyNFTs(account?.address);
-  console.log(nfts);
+  const { nftData: nfts, loading, error } = useNFTData(account.address);
+  console.log(nfts, loading, error);
 
   if (loading) {
     return (
@@ -108,15 +109,17 @@ const MyNFT = () => {
         <div className="flex justify-between font-bold text-lg">
           <div>My NFT</div>
         </div>
+
         <ScrollArea size="1" type="always" scrollbars="horizontal">
           <div className="flex justify-between">
             {nfts.map((e, i) => (
-              // <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
+            // <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
               <AuctionItem item={e} key={i} />
-              // </PopoverWarp>
+            // </PopoverWarp>
             ))}
           </div>
         </ScrollArea>
+
       </div>
     </div>
   );

@@ -11,9 +11,11 @@ import BidRecord from "./_components/BidRecord";
 
 const Page = () => {
   const account = useAccount();
+  console.log(account?.chain?.name);
+
   return (
     <>
-      {account?.isConnected && account?.chain?.name === "Sepolia" ? (
+      {account?.isConnected && account?.chain?.name === "Linea Sepolia Testnet" ? (
         <div className="flex flex-wrap w-full h-[92vh]">
           <div className="w-1/2 flex flex-col">
             <div className="text-center flex-grow">
@@ -36,7 +38,7 @@ const Page = () => {
         </div>
       ) : (
         <div className="h-full w-full text-center text-red-500 mt-[15%]">
-          <Heading>Please connect wallet and switch to Sepolia...</Heading>
+          <Heading>Please connect wallet and switch to Linea Sepolia Testnet...</Heading>
         </div>
       )}
     </>
