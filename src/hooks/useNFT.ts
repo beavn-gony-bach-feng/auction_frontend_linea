@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchJson } from "@/lib/fetchJson";
 import { useAccount } from "wagmi";
+import { fetchJsonAction } from "@/lib/actions";
 
 export interface Attribute {
   trait_type: string;
@@ -40,7 +41,7 @@ interface UseNFTsProps {
   auctionData: any;
 }
 
-const fetchMetadata = async (url: string): Promise<Metadata> => fetchJson(url);
+const fetchMetadata = async (url: string): Promise<Metadata> => fetchJsonAction(url);
 
 export const useMyNFTs = (address: any) => {
   const [nfts, setNfts] = useState<NFTItem[]>([]);
@@ -53,7 +54,7 @@ export const useMyNFTs = (address: any) => {
     console.log("isOwner:", isOwner);
     const fetchNFTs = async () => {
       try {
-        const data = await fetchJson(`https://testnets-api.opensea.io/api/v2/chain/sepolia/account/${address.toString()}/nfts`);
+        const data = await fetchJsonAction(`https://testnets-api.opensea.io/api/v2/chain/sepolia/account/${address.toString()}/nfts`);
 
         const nftPromises = data.nfts.map(async (nft: any) => {
           if (!nft.metadata_url) {
@@ -114,7 +115,7 @@ export const useNFTsBycontract = (address: any) => {
     console.log("isOwner:", isOwner);
     const fetchNFTs = async () => {
       try {
-        const data = await fetchJson(`https://testnets-api.opensea.io/api/v2/chain/sepolia/contract/${address.toString()}/nfts`);
+        const data = await fetchJsonAction(`https://testnets-api.opensea.io/api/v2/chain/sepolia/contract/${address.toString()}/nfts`);
 
         const nftPromises = data.nfts.map(async (nft: any) => {
           if (!nft.metadata_url) {
