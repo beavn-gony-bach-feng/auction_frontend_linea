@@ -129,7 +129,7 @@ export default function AuctionList() {
   }
   auctionStarteds{
     id
-    
+    startTime
     auctionId
     seller
     tokenId
@@ -165,7 +165,7 @@ export default function AuctionList() {
             currentBid: "N/A",
             currentBidder: "N/A",
             auctionId: auction ? auction.auctionId : (auctionDutch ? auctionDutch.auctionId : ""),
-            deadline: auction ? dayjs(auction._startTime * 1000).format("YYYY-MM-DD HH:mm") : (auctionDutch ? dayjs(auctionDutch._startTime * 1000).format("YYYY-MM-DD HH:mm") : nft.deadline),
+            deadline: auction ? dayjs(auction._startTime * 1000).format("YYYY-MM-DD HH:mm") : (auctionDutch ? dayjs(auctionDutch.startTime * 1000).format("YYYY-MM-DD HH:mm") : nft.deadline),
             name: nft.name,
             description: nft.description,
             isOwner: nft.isOwner,

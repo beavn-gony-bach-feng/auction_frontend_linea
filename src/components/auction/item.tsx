@@ -3,6 +3,7 @@ import { LapTimerIcon } from "@radix-ui/react-icons";
 import StorageUtil from "@/lib/storage";
 import Link from "next/link";
 import { useState } from "react";
+import { parseEther, formatUnits } from "viem";
 
 type AuctionItemProps = {
   item: any;
@@ -38,7 +39,10 @@ export default function AuctionItem({ item }: AuctionItemProps) {
         <div className="text-xs">
           <div className="flex">
             <p>Starting Price:</p>
-            <p>{item.price}</p>
+            <p>
+              {formatUnits(item.price, 18) }
+              ETH
+            </p>
           </div>
           <div className="flex mt-0.5">
             <p>Type：</p>
