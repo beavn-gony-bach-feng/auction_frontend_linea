@@ -4,7 +4,7 @@ import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
 import { useTheGraph } from "@/hooks/useTheGraph";
-import { useNFTsBycontract, useAggregateNFTs } from "@/hooks/useNFT";
+import { useNFTsBycontract, useAggregateNFTs, useNFTData } from "@/hooks/useNFT";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import PopoverWarp from "../popover";
@@ -83,7 +83,7 @@ export default function AuctionList() {
     },
   ];
   const { data: auctionData, loading: auctionLoading, error: auctionError } = useTheGraph({
-    url: "https://api.studio.thegraph.com/query/76625/auctionclub0/version/latest",
+    url: "https://api.studio.thegraph.com/query/76625/acb-en-linea/version/latest",
     query: `
     {
       auctionCancelleds {
@@ -111,7 +111,7 @@ export default function AuctionList() {
     `,
   });
   const { data: auctionDutchData, loading: auctionDutchLoading, error: auctionDutchError } = useTheGraph({
-    url: "https://api.studio.thegraph.com/query/76625/auctionclubdutch/version/latest",
+    url: "https://api.studio.thegraph.com/query/76625/acb-du-linea/version/latest",
     query: `
     {
   auctionEndeds {
@@ -141,7 +141,7 @@ export default function AuctionList() {
     `,
   });
 
-  const { nfts: openSeaNFTs, loading: openSeaLoading, error: openSeaError } = useNFTsBycontract("0xcef6df73404baeccdaa5986615233b0e7e442e2d");
+  const { nftData: openSeaNFTs, loading: openSeaLoading, error: openSeaError } = useNFTData();
 
   const [aggregatedNFTs, setAggregatedNFTs] = useState([]);
   const [aggregateLoading, setAggregateLoading] = useState(true);
@@ -152,7 +152,8 @@ export default function AuctionList() {
 
     if (!auctionLoading && !openSeaLoading && auctionData && openSeaNFTs && auctionDutchData) {
       try {
-        const aggregatedData:any = openSeaNFTs.map((nft:any) => {
+        const openSeaNFTsback = openSeaNFTs.filter((nft) => nft.tokenId);
+        const aggregatedData:any = openSeaNFTsback.map((nft:any) => {
           const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.tokenId === nft.tokenId);
           const auctionDutch = (auctionDutchData as any).data.auctionStarteds.find((a) => a.tokenId === nft.tokenId);
           return {
@@ -180,7 +181,6 @@ export default function AuctionList() {
       }
     }
   }, [auctionLoading, openSeaLoading, auctionData, openSeaNFTs, auctionDutchData]);
-
   if (auctionLoading || openSeaLoading || aggregateLoading) {
     return (
       <div className=" h-[40vh] hover:shadow-lg shadow-md  flex-col flex justify-center items-center">

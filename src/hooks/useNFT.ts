@@ -221,7 +221,7 @@ const getLatestNFTsForAddress = (address: string, transfers: any[], nftMinteds: 
   }));
   return nfts.filter((nft) => nft); // Filter out undefined values
 };
-export const useNFTData = (address: string) => {
+export const useNFTData = (address?: string) => {
   const { data, loading, error }:any = useTheGraph({
     url: "https://api.studio.thegraph.com/query/76625/auctionnft/version/latest",
     query: `
@@ -246,8 +246,13 @@ nftminteds{
   useEffect(() => {
     const fetchData = async () => {
       if (data) {
-        const nfts = getLatestNFTsForAddress(address, data.data.transfers, data.data.nftminteds);
+        const nfts = address
+          ? getLatestNFTsForAddress(address, data.data.transfers, data.data.nftminteds)
+          : data.data.nftminteds;
         const metadataPromises = nfts.map(async (nft) => {
+          if (nft.tokenURI.includes(".png")) {
+            return null;
+          }
           const metadata = await fetchMetadata(nft.tokenURI);
           return {
             tokenId: nft.tokenId,
@@ -264,7 +269,8 @@ nftminteds{
           };
         });
         const results = await Promise.all(metadataPromises);
-        setNftData(results);
+        const results1 = results.filter((nft) => nft);
+        setNftData(results1);
       }
     };
 
