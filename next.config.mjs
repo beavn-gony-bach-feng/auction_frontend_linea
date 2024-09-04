@@ -3,7 +3,7 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig = {
   reactStrictMode: false,
   output: "export",
-  assetPrefix: isProd ? "https://auctionclub.github.io/auction_frontend_linea/" : "",
+  assetPrefix: isProd ? "https://beavn-gony-bach-feng.github.io/auction_frontend_linea/" : "",
   basePath: isProd ? "/auction_frontend_linea" : "",
   images: {
     unoptimized: true,
